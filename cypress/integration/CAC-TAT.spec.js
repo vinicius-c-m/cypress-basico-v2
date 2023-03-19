@@ -70,10 +70,12 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             .should('not.be.visible')
     })
 
-    it('verifica que campo de telefone continua vazio ao inserir caracteres não-numéricos', function() {
-        cy.get('#phone')
-            .type('asdfghjklç')
-            .should('be.empty')
+    Cypress._.times(5, function(){
+        it('verifica que campo de telefone continua vazio ao inserir caracteres não-numéricos', function() {
+            cy.get('#phone')
+                .type('asdfghjklç')
+                .should('be.empty')
+        })
     })
 
     it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function() {
@@ -230,6 +232,34 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             .click()
         cy.contains('Talking About Testing').should('be.visible')
     })
+
+    it('exibe e esconde as mensagens de sucesso e erro usando o .invoke', function() {
+        cy.get('.success')
+          .should('not.be.visible')
+          .invoke('show')
+          .should('be.visible')
+          .and('contain', 'Mensagem enviada com sucesso.')
+          .invoke('hide')
+          .should('not.be.visible')
+        cy.get('.error')
+          .should('not.be.visible')
+          .invoke('show')
+          .should('be.visible')
+          .and('contain', 'Valide os campos obrigatórios!')
+          .invoke('hide')
+          .should('not.be.visible')
+      })
+
+      it('preenche a area de texto usando o comando invoke', function() {
+        
+        const longText = Cypress._.repeat('0123456789', 20)
+
+        cy.get('#open-text-area')
+            .should('have.value', '')
+            .invoke('val', longText)
+            .should('have.value', longText)
+
+      })
 
   })
   
